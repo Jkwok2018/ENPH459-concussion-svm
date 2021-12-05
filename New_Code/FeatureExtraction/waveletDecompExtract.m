@@ -1,6 +1,6 @@
 function [ waveletDecompFeatures ] = waveletDecompExtract( besaOutput, waveletFunction )
 %waveletDecompExtract Extraction of Wavelet Decomposition Features
-%   Input:time series, “besaOutput”, and the wavelet function used for
+%   Input:time series, besaOutput, and the wavelet function used for
 %   wavelet decomposition, waveletFunction
 %   Output: n x m matrix consisting of n features and m channels
 
