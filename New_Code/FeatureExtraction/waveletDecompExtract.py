@@ -5,7 +5,7 @@ import statistics
 
 def getZeroCrossingRate(self,arr):
     my_array = np.array(arr)
-    return float("{0:.2f}".format((((my_array[:-1] * my_array[1:]) < 0).sum())/len(arr)))
+    return float("{0:.2f}".format((((my_array[:-1] * my_array[1:]) < 0).sum())
 def wrcoef(data, coef_type='d', wname='db6', level=9):
     w = Wavelet(wname)
     a = data
@@ -50,11 +50,12 @@ def waveletDecompExtract(besaOutput = None,waveletFunction = None):
         D6 = wrcoef(besaOutput[:,i], 'd',waveletFunction,6)
         A6 = wrcoef(besaOutput[:,i], 'a',waveletFunction,6)
      
-        waveletDecompFeatures = [statistics.mean(D3), statistics.mean(D4), 
-                    statistics.mean(D5), statistics.mean(D6), 
-                    statistics.mean(A6), statistics.stdev(D3),
-                    statistics.stdev(D4), statistics.stdev(D5), 
-                    statistics.stdev(D6), statistics.stdev(A6)]
+D3)]
+        # to), statistics.mean(D4), 
+        #             statistics.mean(D5.to_list()), statistics.mean(D6), 
+        #             statistics.mean(A6), statistics.stdev(D3),
+        #             statistics.stdev(D4), statistics.stdev(D5), 
+                    # statistics.stdev(D6), statistics.stdev(A6.tolist())]
         
 
         # waveletDecompFeatures[i].append(statistics.mean(D3))
@@ -92,6 +93,8 @@ def waveletDecompExtract(besaOutput = None,waveletFunction = None):
       
         # Normalized Number of zero crossings
         hzcd = dsp.ZeroCrossingDetector
+        print(getZeroCrossingRate(D3))
+        break
         waveletDecompFeatures += [step(hzcd,D3), step(hzcd,D4), step(hzcd,D5), step(hzcd,D6), step(hzcd,A6)]
     
     waveletDecompFeatures = transpose(waveletDecompFeatures)
