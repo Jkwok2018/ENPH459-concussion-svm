@@ -8,11 +8,9 @@ def getAccuracy(svmLabels = None,actualLabels = None):
     
     rowSize,colSize = svmLabels.shape
     missclass = 0
-    for row in np.arange(1,rowSize+1).reshape(-1):
-        if svmLabels(row,1) != actualLabels(row,1):
-            missclass = missclass + 1
+    for row in range(rowSize):
+        if svmLabels[row,0] != actualLabels[row,0]:
+            missclass += 1
     
     accuracyRate = (rowSize - missclass) / rowSize
-    return accuracyRate
-    
     return accuracyRate

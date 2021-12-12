@@ -1,4 +1,5 @@
 import numpy as np
+from tabulate import tabulate
     
 def getShannonEntropy(eegMatrix = None,decimalPlace = None): 
     #GETSHANNONENTROPY Takes in matrix of EEG data and returns a 1x27 matrix
@@ -11,14 +12,12 @@ def getShannonEntropy(eegMatrix = None,decimalPlace = None):
     
     rowSize,colSize = eegMatrix.shape
     shannonEntropyMatrix = np.zeros((1,colSize))
-    for col in np.arange(1,colSize+1).reshape(-1):
-        roundedCol = np.round(eegMatrix(:,col),decimalPlace)
-        freqTable = tabulate(roundedCol)
-        freqTable[:,3] = freqTable(:,3) / 100
-        freqRow,freqCol = freqTable.shape
-        for i in np.arange(1,freqRow+1).reshape(-1):
-            shannonEntropyMatrix[1,col] = shannonEntropyMatrix(1,col) + (- freqTable(i,3)) * (np.log(freqTable(i,3)))
-    
+    for col in range(colSize):
+        roundedCol = np.round(eegMatrix[:,col],decimalPlace)
+        unique_ele, counts_ele = np.unique(roundedCol, return_counts= True)
+        counts_ele = (counts_ele/len(roundedCol))
+
+        for i in range(len(unique_ele)):
+            shannonEntropyMatrix[0,col] += (-counts_ele[i]) * (np.log(counts_ele[i]))
     return shannonEntropyMatrix
     
-    return shannonEntropyMatrix

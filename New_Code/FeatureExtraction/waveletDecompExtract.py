@@ -3,9 +3,9 @@ import numpy as np
 from pywt import wavedec, upcoef, Wavelet, dwt, waverec
 import statistics
 
-def getZeroCrossingRate(self,arr):
+def getZeroCrossingRate(arr):
     my_array = np.array(arr)
-    return float("{0:.2f}".format((((my_array[:-1] * my_array[1:]) < 0).sum())
+    return ((my_array[:-1] * my_array[1:]) < 0).sum()
 def wrcoef(data, coef_type='d', wname='db6', level=9):
     w = Wavelet(wname)
     a = data
@@ -43,20 +43,18 @@ def waveletDecompExtract(besaOutput = None,waveletFunction = None):
 
         # Calculation The Coefficients Vectors
         D1 = wrcoef(besaOutput[:,i], 'd',waveletFunction,1)
-        D2 = wrcoef(besaOutput[:,i], 'd',waveletFunction,2)
-        D3 = wrcoef(besaOutput[:,i], 'd',waveletFunction,3)
-        D4 = wrcoef(besaOutput[:,i], 'd',waveletFunction,4)
-        D5 = wrcoef(besaOutput[:,i], 'd',waveletFunction,5)
-        D6 = wrcoef(besaOutput[:,i], 'd',waveletFunction,6)
-        A6 = wrcoef(besaOutput[:,i], 'a',waveletFunction,6)
-     
-D3)]
-        # to), statistics.mean(D4), 
-        #             statistics.mean(D5.to_list()), statistics.mean(D6), 
-        #             statistics.mean(A6), statistics.stdev(D3),
-        #             statistics.stdev(D4), statistics.stdev(D5), 
-                    # statistics.stdev(D6), statistics.stdev(A6.tolist())]
-        
+        D2 = wrcoef(besaOutput[:,i], 'd',waveletFunction,2)[1]
+        D3 = wrcoef(besaOutput[:,i], 'd',waveletFunction,3)[2]
+        D4 = wrcoef(besaOutput[:,i], 'd',waveletFunction,4)[3]
+        D5 = wrcoef(besaOutput[:,i], 'd',waveletFunction,5)[4]
+        D6 = wrcoef(besaOutput[:,i], 'd',waveletFunction,6)[5]
+        A6 = wrcoef(besaOutput[:,i], 'a',waveletFunction,6)[-1]
+      
+        waveletDecompFeatures = [statistics.mean(D3.tolist()), statistics.mean(D4.tolist()), 
+                    statistics.mean(D5.tolist()), statistics.mean(D6.tolist()), 
+                    statistics.mean(A6.tolist()), statistics.stdev(D3.tolist()),
+                    statistics.stdev(D4.tolist()), statistics.stdev(D5.tolist()), 
+                    statistics.stdev(D6.tolist()), statistics.stdev(A6.tolist())]
 
         # waveletDecompFeatures[i].append(statistics.mean(D3))
         # count = count + 1
@@ -92,12 +90,13 @@ D3)]
                                 sum(A6 ** 2) / totalPower]
       
         # Normalized Number of zero crossings
-        hzcd = dsp.ZeroCrossingDetector
-        print(getZeroCrossingRate(D3))
-        break
-        waveletDecompFeatures += [step(hzcd,D3), step(hzcd,D4), step(hzcd,D5), step(hzcd,D6), step(hzcd,A6)]
+        # hzcd = dsp.ZeroCrossingDetector
+        waveletDecompFeatures += [getZeroCrossingRate(D3), 
+                                    getZeroCrossingRate(D4),
+                                    getZeroCrossingRate(D5),
+                                    getZeroCrossingRate(D6),
+                                    getZeroCrossingRate(A6)]
+        waveletDecompFeatures_full.append(waveletDecompFeatures)
     
-    waveletDecompFeatures = transpose(waveletDecompFeatures)
-    
-    
-    return waveletDecompFeatures
+    waveletDecompFeatures_full = np.transpose(waveletDecompFeatures_full)
+    return waveletDecompFeatures_full

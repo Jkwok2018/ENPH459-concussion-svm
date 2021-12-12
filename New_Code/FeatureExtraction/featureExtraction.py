@@ -1,13 +1,42 @@
 #Requires: Folders names "Concussed" and "Controls" in the given directory
 #corresponding to EEG Data for conccussed patients and control patients
 #respectively.
-
+from .extractFeatures import extractFeatures
 import numpy as np
+import glob
     
 def featureExtraction(directory = None): 
     #directory = 'C:\Users\Dylan\Desktop\New folder\Capstone Training Data';
     
     #Extract .mat files corresponding to concussed patients
+    
+    concussedDirectory = sorted(glob.glob(directory+ "/Concussed/*/*.mat"))
+    controlDirectory = sorted(glob.glob(directory+ "/Controls/*/*.mat"))
+
+    featureMatrix = np.zeros((len(concussedDirectory)+ len(controlDirectory), 756))
+    
+    for i, file_name in enumerate(concussedDirectory):
+        features = extractFeatures(file_name)
+        features = np.matrix(features).flatten('F')
+        featureMatrix[i] = features
+  
+    #Extract .mat files corresponding to non-concussed patients
+    for j, file_name in enumerate(controlDirectory):
+        features = extractFeatures(file_name)
+        features = np.matrix(features).flatten('F')
+        featureMatrix[j+ len(concussedDirectory)] = features
+
+  
+    labels = np.append(np.ones((len(concussedDirectory))), np.zeros((len(concussedDirectory))))
+    
+    return featureMatrix,labels
+
+
+    
+
+    
+
+    """
     concussedDirectory = dir(strcat(directory,'\Concussed\*\*.mat'))
     concussedFilenames = np.array([concussedDirectory.name])
     concussedFoldernames = np.array([concussedDirectory.folder])
@@ -19,20 +48,6 @@ def featureExtraction(directory = None):
     for k in np.arange(1,len(concussedFilenames)+1).reshape(-1):
         #eegMat = load(strcat(concussedFoldernames{k},'\',concussedFilenames{k}));
         features = extractFeatures(strcat(concussedFoldernames[k],'\',concussedFilenames[k]))
-        featureMatrix[k,:] = np.transpose(features)
-    
-    #Extract .mat files corresponding to non-concussed patients
-    controlDirectory = dir(strcat(directory,'\Controls\*\*.mat'))
-    controlFilenames = np.array([controlDirectory.name])
-    controlFoldernames = np.array([controlDirectory.folder])
-    #Append control features to control matrix
-    for j in np.arange(1,len(controlFilenames)+1).reshape(-1):
-        k = k + 1
-        features = extractFeatures(strcat(controlFoldernames[j],'\',controlFilenames[j]))
-        featureMatrix[k,:] = np.transpose(features)
-    
-    labels = np.ones((len(concussedFilenames) + len(controlFilenames),1))
-    labels[np.arange[len[concussedFilenames] + 1,len[labels]+1],1] = 0
-    return featureMatrix,labels
-    
-    return featureMatrix,labels
+        featureMatrix[k,:] = np.transpose(features)"""
+
+# featureExtraction("/Users/melodyzhao/Desktop/Python/ENPH459-concussion-svm/New_Code")

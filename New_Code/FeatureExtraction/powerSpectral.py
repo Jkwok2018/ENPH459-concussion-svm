@@ -7,7 +7,8 @@
 # theta power, mean alpha power, mean beta power, mean gamma power, alphaPower/thetaPower, betaPower/alphaPower, gammaPower/betaPower.
 
 import numpy as np
-import meanPower as mp
+from . import meanPower
+# import .meanPower as mp
     
 def powerSpectral(eegMat = None): 
     samplingFrequency = 250
@@ -45,11 +46,11 @@ def powerSpectral(eegMat = None):
         thetaPower = (sum(theta)) / len(theta)
 
         featureMatrix[0,i] = thetaPower
-        alphaPower = mp.meanPower(y,frequencyIncrement,numRows,8,12)
+        alphaPower = meanPower.meanPower(y,frequencyIncrement,numRows,8,12)
         featureMatrix[1,i] = alphaPower
-        betaPower = mp.meanPower(y,frequencyIncrement,numRows,12,30)
+        betaPower = meanPower.meanPower(y,frequencyIncrement,numRows,12,30)
         featureMatrix[2,i] = betaPower
-        gammaPower = mp.meanPower(y,frequencyIncrement,numRows,30,50)
+        gammaPower = meanPower.meanPower(y,frequencyIncrement,numRows,30,50)
         featureMatrix[3,i] = gammaPower
         # Compute the ratios of absolute power in adjacent frequency bands
         featureMatrix[4,i] = alphaPower / thetaPower

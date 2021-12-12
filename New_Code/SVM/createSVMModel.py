@@ -1,4 +1,7 @@
     
+from sklearn import svm
+from sklearn.model_selection import cross_val_score
+
 def createSVMModel(dataset = None,labels = None,svmMethod = None): 
     #CREATESVMMODEL_ Creates cross-validated SVM model based on loaded dataset, labels and
 #method (either "fitcsvm" or "fitclinear")
@@ -10,14 +13,18 @@ def createSVMModel(dataset = None,labels = None,svmMethod = None):
 #           dimensional parameters
     
     if svmMethod == 'fitcsvm':
-        kFoldSVMModel = fitcsvm(dataset,labels,'Crossval','on','Standardize',True,'KernelFunction','RBF','KernelScale','auto')
-        holdOutSVMModel = fitcsvm(dataset,labels,'Crossval','on','Holdout',0.1,'Standardize',True,'KernelFunction','RBF','KernelScale','auto')
-        leaveOutSVMModel = fitcsvm(dataset,labels,'Crossval','on','Leaveout','on','Standardize',True,'KernelFunction','RBF','KernelScale','auto')
+        # kFoldSVMModel = fitcsvm(dataset,labels,'Crossval'='on','Standardize' = True,'KernelFunction'='RBF','KernelScale' = 'auto')
+        # holdOutSVMModel = fitcsvm(dataset,labels,'Crossval','on','Holdout',0.1,'Standardize',True,'KernelFunction','RBF','KernelScale','auto')
+        # leaveOutSVMModel = fitcsvm(dataset,labels,'Crossval','on','Leaveout','on','Standardize',True,'KernelFunction','RBF','KernelScale','auto')
+        # clf = svm.SVC(kernel='rbf')
+        # clf.fit(dataset, labels)
+        kFoldSVMModel = svm.SVC(kernel = 'rbf')
     else:
         if svmMethod == 'fitclinear':
-            kFoldSVMModel = fitclinear(dataset,labels)
+            kFoldSVMModel = svm.LinearSVC()
+    kFoldSVMModel.fit(dataset, labels)
     
-    holdOutSVMModel = holdOutSVMModel.Trained[0]
-    return kFoldSVMModel,holdOutSVMModel,leaveOutSVMModel
+    # holdOutSVMModel = holdOutSVMModel.Trained[0]
+    # return kFoldSVMModel,holdOutSVMModel,leaveOutSVMModel
+    return kFoldSVMModel
     
-    return kFoldSVMModel,holdOutSVMModel,leaveOutSVMModel

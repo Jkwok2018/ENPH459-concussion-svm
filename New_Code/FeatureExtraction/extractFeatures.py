@@ -1,7 +1,8 @@
 import numpy as np
 import scipy.io
-from powerSpectral import powerSpectral
-from waveletDecompExtract import waveletDecompExtract
+from .powerSpectral import powerSpectral
+from .waveletDecompExtract import waveletDecompExtract
+from .getShannonEntropy import getShannonEntropy
 
 def extractFeatures(eegMat = None): 
     #EXTRACT_FEATURES Takes in the .mat file of EEG and returns a matrix
@@ -16,33 +17,39 @@ def extractFeatures(eegMat = None):
 #   Output: featureMatrix - 30x27 matrix containing features (row) of each
 #   channel (column)
     
+    print('file is', eegMat)
     eegStruct = scipy.io.loadmat(eegMat)
     field = eegStruct.keys()
- 
-    data = eegStruct['data']
+    print(list(field))
+    
+    # data = eegStruct['data']
+    data = eegStruct[list(field)[-1]]
     rows, cols = data.shape
-    featureMatrix = np.zeros((30,cols))
+    featureMatrix = np.zeros((28,cols))
+    
     powerSpectralMatrix = powerSpectral(data)
-    featureMatrix[0:7, 0:27] = powerSpectralMatrix
+    print('p', powerSpectralMatrix.shape) # &7, 27
+    featureMatrix[0:7, 0:27] = powerSpectralMatrix #(0,0) to (7, 27)
     
     # # Wavelet Decomposition Analysis
     waveletDecompMatrix = waveletDecompExtract(data,'db8')
-
-    # for j in np.arange(1,waveletDecompMatrix.shape[1-1]+1).reshape(-1):
-    #     k = k + 1
-    #     featureMatrix[k,:] = waveletDecompMatrix(j,:)
+    print('w', waveletDecompMatrix.shape) # 20, 27
+    featureMatrix[7:27, 0:27] = waveletDecompMatrix
     
-    # # Shannon Entropy Analysis
-    # shannonEntropyMatrix = getShannonEntropy(eegMatrix,1)
+    
+    # Shannon Entropy Analysis
+    shannonEntropyMatrix = getShannonEntropy(data,1)
+    print('s', shannonEntropyMatrix.shape)
+    featureMatrix[27, 0:27] = shannonEntropyMatrix
     # for j in np.arange(1,shannonEntropyMatrix.shape[1-1]+1).reshape(-1):
     #     k = k + 1
     #     featureMatrix[k,:] = shannonEntropyMatrix(j,:)
     
-    # return featureMatrix
+    return featureMatrix
     
     # return featureMatrix
 
-extractFeatures("/Users/melodyzhao/Desktop/Python/ENPH459-concussion-svm/New_Code/Concussed/AG/matlab.mat")
+# extractFeatures("/Users/melodyzhao/Desktop/Python/ENPH459-concussion-svm/New_Code/Concussed/AG/matlab.mat")
 
     # field = fieldnames(eegStruct)
     # fieldName = field[0]

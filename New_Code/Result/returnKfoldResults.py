@@ -1,5 +1,6 @@
 import numpy as np
     
+# TODO: how to get trained from kFoldObject
 def returnKfoldResults(kFoldObject = None,predictionData = None): 
     #RETURNKFOLDRESULTS Returns averaged predictions of kfold cross-validated
 #SVM models
@@ -22,4 +23,3 @@ def returnKfoldResults(kFoldObject = None,predictionData = None):
     
     return prediction
     
-    return prediction
