@@ -8,6 +8,7 @@
 
 import numpy as np
 from . import meanPower
+import matplotlib.pyplot as plt
 # import .meanPower as mp
     
 def powerSpectral(eegMat = None): 
@@ -17,11 +18,16 @@ def powerSpectral(eegMat = None):
     # print('numRows', numRows)
     frequencyIncrement = samplingFrequency / numRows
     featureMatrix = np.zeros((7, 27))
+    fig, axs = plt.subplots(27)
     # For each of the 27 channels, compute the discrete fourier transform, find
 # the frequency bands that correspond to brain waves (i.e Alpha, Beta,
 # Gamma, Theta), and compute the mean absolute powers
     for i in range(27):
         y = (np.abs(np.fft.fft(eegMat[:,i])) ** 2) / numRows
+
+        frequency = np.linspace(0, samplingFrequency/2, len(y))
+
+        axs[i].plot(frequency, y)
         # print(len(y))
 
         
@@ -56,5 +62,5 @@ def powerSpectral(eegMat = None):
         featureMatrix[4,i] = alphaPower / thetaPower
         featureMatrix[5,i] = betaPower / alphaPower
         featureMatrix[6,i] = gammaPower / betaPower
-    
+    plt.show()
     return featureMatrix
